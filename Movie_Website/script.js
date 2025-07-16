@@ -1,3 +1,47 @@
+const API_URL = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1';
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
+const movieContainer = document.getElementById('movie-container');
+
+const getPopularMovies = async () => {
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    showMovies(data.results);
+  } catch {
+    console.log("Failed to fetch movies:", log);
+    movieContainer.innerHTML = `<p style="color: red; text-align: center;">Oops! Something went wrong while fetching movies.</p>`;
+  }
+};
+
+const showMovies = (movies) => {
+  movieContainer.innerHTML = '';
+
+  movies.forEach((movie) => {
+    const { title, poster_path, vote_average } = movie;
+
+    const movieCard = document.createElement('div');
+    movieCard.classList.add('movie');
+
+    movieCard.innerHTML = `
+      <img src="${IMAGE_BASE_URL + poster_path}" alt="${title}" />
+      <div class="movie-info">
+        <h3 class="movie-title">${title}</h3>
+        <p class="movie-rating">⭐ ${vote_average}</p>
+      </div>
+    `;
+
+    movieContainer.appendChild(movieCard);
+  });
+};
+
+getPopularMovies();
+
+
+
+
+
+//---------------------------------------------------------------API fetch data-----------------------------------------------------------------
 // {
 //   "page": 1,
 //   "results": [
@@ -325,42 +369,3 @@
 //   "total_pages": 51033,
 //   "total_results": 1020654
 // }
-
-const API_URL = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-
-const movieContainer = document.getElementById('movie-container');
-
-const getPopularMovies = async () => {
-  try {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    showMovies(data.results);
-  } catch {
-    console.log("Failed to fetch movies:", log);
-    movieContainer.innerHTML = `<p style="color: red; text-align: center;">Oops! Something went wrong while fetching movies.</p>`;
-  }
-};
-
-const showMovies = (movies) => {
-  movieContainer.innerHTML = '';
-
-  movies.forEach((movie) => {
-    const { title, poster_path, vote_average } = movie;
-
-    const movieCard = document.createElement('div');
-    movieCard.classList.add('movie');
-
-    movieCard.innerHTML = `
-      <img src="${IMAGE_BASE_URL + poster_path}" alt="${title}" />
-      <div class="movie-info">
-        <h3 class="movie-title">${title}</h3>
-        <p class="movie-rating">⭐ ${vote_average}</p>
-      </div>
-    `;
-
-    movieContainer.appendChild(movieCard);
-  });
-};
-
-getPopularMovies();
